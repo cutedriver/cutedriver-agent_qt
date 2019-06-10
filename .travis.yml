@@ -1,51 +1,60 @@
 language: cpp
 os:
-  - linux
-  - osx
+- linux
+- osx
 dist: trusty
 compiler:
-  - clang
-  - gcc
+- clang
+- gcc
 sudo: required
-
 env:
-  - QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
-  - QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
-  - QT=58 BREW=ex PPA=beineri/opt-qt58-trusty
-
+- QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
+- QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
+- QT=58 BREW=ex PPA=beineri/opt-qt58-trusty
 matrix:
   allow_failures:
-    - { os: osx, env: QT=55 BREW=55 PPA=beineri/opt-qt551-trusty } # https://llvm.org/bugs/show_bug.cgi?id=26396
+  - os: osx
+    env: QT=55 BREW=55 PPA=beineri/opt-qt551-trusty
   exclude:
-    - { os: osx, env: QT=57 BREW=ex PPA=beineri/opt-qt571-trusty }
-    - { os: osx, env: QT=58 BREW=ex PPA=beineri/opt-qt58-trusty  }
-    - { os: osx, compiler: gcc, env: QT=5  BREW=5 } # Qt 5.6 no longer supports gcc on OS X.
-    - { os: osx, compiler: gcc, env: QT=56 BREW=5  PPA=beineri/opt-qt562-trusty } # Qt 5.6 no longer supports gcc on OS X.
-
+  - os: osx
+    env: QT=57 BREW=ex PPA=beineri/opt-qt571-trusty
+  - os: osx
+    env: QT=58 BREW=ex PPA=beineri/opt-qt58-trusty
+  - os: osx
+    compiler: gcc
+    env: QT=5  BREW=5
+  - os: osx
+    compiler: gcc
+    env: QT=56 BREW=5  PPA=beineri/opt-qt562-trusty
 before_install:
-  - '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
-  - '[ "$TRAVIS_OS_NAME" != linux ] || sudo apt-get -qy update'
-  - '[ "$TRAVIS_OS_NAME" != osx ] || brew update'
-
+- '[[ "$TRAVIS_OS_NAME" != linux || -z "$PPA" ]] || sudo add-apt-repository -y ppa:$PPA'
+- '[ "$TRAVIS_OS_NAME" != linux ] || sudo apt-get -qy update'
+- '[ "$TRAVIS_OS_NAME" != osx ] || brew update'
 install:
-  - echo Installing QT ${QT}
-  - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || sudo apt-get -qy install qt${QT}3d qt${QT}base qt${QT}canvas3d qt${QT}connectivity qt${QT}declarative qt${QT}graphicaleffects qt${QT}imageformats qt${QT}location qt${QT}multimedia qt${QT}quickcontrols qt${QT}quickcontrols2 qt${QT}script qt${QT}sensors qt${QT}serialport qt${QT}svg qt${QT}tools qt${QT}translations qt${QT}x11extras qt${QT}xmlpatterns'
-  - '[ "$TRAVIS_OS_NAME" != osx ] || brew install qt$BREW'
-  - '[ "$TRAVIS_OS_NAME" != osx ] || brew link --force qt$BREW'
-  - echo Installing Dependencies ${QT}
-  - '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install libx11-dev libxext-dev libxi-dev libxtst-dev'
-
+- echo Installing QT ${QT}
+- '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || sudo apt-get -qy install
+  qt${QT}3d qt${QT}base qt${QT}canvas3d qt${QT}connectivity qt${QT}declarative qt${QT}graphicaleffects
+  qt${QT}imageformats qt${QT}location qt${QT}multimedia qt${QT}quickcontrols qt${QT}quickcontrols2
+  qt${QT}script qt${QT}sensors qt${QT}serialport qt${QT}svg qt${QT}tools qt${QT}translations
+  qt${QT}x11extras qt${QT}xmlpatterns'
+- '[ "$TRAVIS_OS_NAME" != osx ] || brew install qt$BREW'
+- '[ "$TRAVIS_OS_NAME" != osx ] || brew link --force qt$BREW'
+- echo Installing Dependencies ${QT}
+- '[[ "$TRAVIS_OS_NAME" != linux ]] || sudo apt-get -qy install libx11-dev libxext-dev
+  libxi-dev libxtst-dev'
 before_script:
-  - '[[ "$TRAVIS_OS_NAME" != linux || "$CXX" != clang++ ]] || export QMAKESPEC=linux-clang'
-  - '[[ "$TRAVIS_OS_NAME" != linux || "$CXX" != g++     ]] || export QMAKESPEC=linux-g++'
-  - '[[ "$TRAVIS_OS_NAME" != osx   || "$CXX" != clang++ ]] || export QMAKESPEC=macx-clang'
-  - '[[ "$TRAVIS_OS_NAME" != osx   || "$CXX" != g++     ]] || export QMAKESPEC=macx-g++'
-  - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || . /opt/qt$QT/bin/qt$QT-env.sh'
-  - '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" == */opt-* ]] || export QT_SELECT=qt5'
-  - pushd $TRAVIS_BUILD_DIR
-  - qmake -r CONFIG+=debug_and_release CONFIG+=no_webkit qt_testability.pro
-  - popd
-
+- '[[ "$TRAVIS_OS_NAME" != linux || "$CXX" != clang++ ]] || export QMAKESPEC=linux-clang'
+- '[[ "$TRAVIS_OS_NAME" != linux || "$CXX" != g++     ]] || export QMAKESPEC=linux-g++'
+- '[[ "$TRAVIS_OS_NAME" != osx   || "$CXX" != clang++ ]] || export QMAKESPEC=macx-clang'
+- '[[ "$TRAVIS_OS_NAME" != osx   || "$CXX" != g++     ]] || export QMAKESPEC=macx-g++'
+- '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" != */opt-* ]] || . /opt/qt$QT/bin/qt$QT-env.sh'
+- '[[ "$TRAVIS_OS_NAME" != linux || "$PPA" == */opt-* ]] || export QT_SELECT=qt5'
+- pushd $TRAVIS_BUILD_DIR
+- qmake -r CONFIG+=debug_and_release CONFIG+=no_webkit qt_testability.pro
+- popd
 script:
-  - pushd $TRAVIS_BUILD_DIR
-  - make all -j2
+- pushd $TRAVIS_BUILD_DIR
+- make all -j2
+notifications:
+  slack:
+    secure: fRDSY8c9z5FHS0cRDhAbXtFokn29vsxtjzi719YKkMz8hHC4LeNTFSEn3bT3izZR/ZcVdONaTZArDnpzOjASNyw6NhLVnfBM6R6ti1SRhLif6Lcn703bYyXcvp8qiKIPjP+h2KULS/I317zHlzjuD7EaR/MIxnYOlsS99tGr046thioUhzZd2r7/XrTgnUcUKGgCBw4kqrXvaObXeSZ14+Mjx6NQUzV0x6ltbIGzN1WWUbcOSWs8vLvh5ioRTerO4PfOQ23v4NhiGyU6wEC0wlMpB9VeaKmSfh858CInXApFsv1tH67sq9rZGvH3f0yK0a8ZSt6iXYysSJ78cVMJFGSeYycA0VCk6gPFQECVJKxdxzGtQoM8a1O6g2S1xwlUfLcuXtoc5Yhce4gKuIzzuF6ZMLlp73Tz274gK7119b2lL0ddcjlaYPML2vAPsizmfFX50eeuro2MnvUn9LzNoCcq4r9RpOs8mVhKur26dFa+Kw8ZJuA8TpA890AThxWnr1eqXsrvK2+vzGEW5preGFXUCSfHDLOz4StwFS4j2rmY4TtsD/zFg7cmuNVe4Cp0bZtZyaVfYbzuL8Q0DyHzhCe86e5gCUSENBljkqW3iC/LRgBo++RmmASBhntysBP66h16IjXt8wMhVN312NTKt+/HWmr2FAxDu0TrBHuVB70=
