@@ -1,8 +1,8 @@
+![alt travis-ci state on master branch](https://travis-ci.org/cutedriver/cutedriver-agent_qt.svg?branch=master)
+
 cuTeDriver is a Testability Driver (TDriver) fork.
 
 cuTeDriver is a framework for remote execution, automatic testing, regression testing and even automated performance measurement for any Qt-based application.
-
-For more information about cuTeDriver visit https://github.com/nomovok-opensource/cutedriver-agent_qt/wiki
 
 Major changes:
 * Wayland support
@@ -15,9 +15,5 @@ Minor changes:
 * Fractional cooridnate fix for Visualizer
 * renaming to cuTeDriver
 
-Build instructions:
-https://github.com/nomovok-opensource/cutedriver-agent_qt/wiki/Setup%3A-agent_qt
 
-For details contact:
-antti.korventausta@nomovok.com
-jukka.raninen@nomovok.com
+
