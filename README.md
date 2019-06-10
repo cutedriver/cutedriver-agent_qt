@@ -1,4 +1,4 @@
-![alt travis-ci state on master branch](https://travis-ci.org/cutedriver/cutedriver-agent_qt.svg?branch=master)
+[![alt travis-ci](https://travis-ci.org/cutedriver/cutedriver-agent_qt.svg?branch=master)](https://travis-ci.org/cutedriver/cutedriver-agent_qt)
 
 cuTeDriver is a Testability Driver (TDriver) fork.
 
